@@ -118,8 +118,26 @@ views.cours = () => {
 
 views.tps = () => {
   app.innerHTML = `<h1>TP1 &amp; TP3 — corrigés résumés</h1><p class="lead">Les deux TP déjà faits en cours : mêmes questions-types que le TP noté.</p>
-  ${TPS.map((t, i) => `<details data-id="tp${i}" ${i === 0 ? "open" : ""}><summary>${t.titre}</summary><div class="inner">${t.html}</div></details>`).join("")}
+  ${TPS.map((t, i) => `<details data-id="tp${i}" ${i === 0 ? "open" : ""}><summary>${t.titre}</summary><div class="inner">
+    <div class="pdf-zone"><div class="row">
+      <button class="btn ghost small pdf-btn" data-src="${t.sujet}">📄 Sujet</button>
+      <button class="btn ghost small pdf-btn" data-src="${t.corrige}">✅ Corrigé</button>
+      <a class="pdf-open" hidden target="_blank" rel="noopener">Ouvrir dans un onglet ↗</a>
+    </div><iframe class="pdf-frame" hidden title="Document du TP"></iframe></div>
+    ${t.html}</div></details>`).join("")}
   <div class="callout">Le TP noté SportéO est la synthèse des deux : <b>deux faits</b> (comme TP3), un <b>snapshot</b> de stock (nouveau), des <b>SCD2</b> (TP1/TP3), des <b>membres inconnus</b>, une <b>junk dimension</b> et une <b>dimension dégénérée</b>.</div>`;
+  // le PDF n'est chargé qu'au clic ; recliquer sur le même bouton le referme
+  $$(".pdf-zone", app).forEach(zone => {
+    const frame = $(".pdf-frame", zone), link = $(".pdf-open", zone), btns = $$(".pdf-btn", zone);
+    btns.forEach(b => b.onclick = () => {
+      const close = b.classList.contains("on");
+      btns.forEach(x => x.classList.remove("on"));
+      frame.hidden = link.hidden = close;
+      if (close) { frame.removeAttribute("src"); return; }
+      b.classList.add("on");
+      frame.src = link.href = b.dataset.src;
+    });
+  });
 };
 
 /* ----- SportéO ----- */

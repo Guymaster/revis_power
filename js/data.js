@@ -348,7 +348,7 @@ Hiérarchie : <b>Magasin → Ville → Région</b>. Le magasin fictif WEB (id 99
 
 /* ---------- TP1 et TP3 (résumés des corrigés) ---------- */
 const TPS = [
-{ titre: "TP1 — Planning des cours (étoile simple)", html: `
+{ titre: "TP1 — Planning des cours (étoile simple)", sujet: "docs/tp1-sujet.pdf", corrige: "docs/tp1-corrige.pdf", html: `
 <p><b>Contexte</b> : application de planning (SEANCE, PROFESSEUR, SALLE, MATIERE, GROUPE). Besoin : charge des profs, taux d'occupation des salles, volume d'heures par matière et semestre.</p>
 <ol class="steps">
 <li><b>Processus</b> : la programmation des séances de cours (seul processus de la source, entité SEANCE).</li>
@@ -359,7 +359,7 @@ const TPS = [
 <div class="box fact"><b>FAIT_SEANCE</b>6 FK<br>NbSeances, DureeSeance, EffectifGroupe, TauxOccupation, SeanceAnnulee</div>
 <div class="col"><div class="box"><b>DIM_CRENEAU</b>HeureDébut, HeureFin, Plage</div><div class="box"><b>DIM_PROFESSEUR</b> (SCD2)Nom, Département, Statut</div><div class="box"><b>DIM_SALLE</b> (SCD2)NomSalle, Bâtiment, Capacité</div></div></div>
 <p><b>Bonus</b> : FAIT_DISPONIBILITE_SALLE (Salle, Date, Créneau) = <b>factless fact table</b> (couverture) pour détecter conflits et disponibilités. Évolution : Dim_TypeSeance (CM/TD/TP).</p>`},
-{ titre: "TP3 — Compagnie aérienne (constellation)", html: `
+{ titre: "TP3 — Compagnie aérienne (constellation)", sujet: "docs/tp3-sujet.pdf", corrige: "docs/tp3-corrige.pdf", html: `
 <p><b>Contexte</b> : billetterie (CLIENT, RESERVATION, BILLET, TARIF) + exploitation des vols (VOL, AVION, AEROPORT, PORTE, PERSONNEL_NAVIGANT, AFFECTATION).</p>
 <ol class="steps">
 <li><b>Deux processus</b> : la <b>billetterie</b> (vente de billets) et l'<b>exploitation des vols</b>. Deux grains différents ⇒ deux faits ⇒ <b>constellation</b>.</li>
