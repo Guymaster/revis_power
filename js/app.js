@@ -85,6 +85,8 @@ views.methode = () => {
 views.cours = () => {
   const read = store.get("cours_read", {});
   app.innerHTML = `<h1>Fiches de cours</h1><p class="lead">Synthèse du support « Ingénierie et exploitation d'entrepôts de données » (chapitres 2, 3, 5, 6, 7, 8). Coche une fiche quand tu la maîtrises.</p>
+  <div class="row" style="margin-bottom:8px"><input type="search" id="coursSearch" placeholder="Rechercher un terme dans le cours (ex. granularité, SCD2, ODS)…" style="flex:1;min-width:0" autocomplete="off">
+  <span class="tag" id="coursCount">${COURSE.length} fiches</span></div>
   ${COURSE.map(c => `<details data-id="${c.id}"><summary>${read[c.id] ? '<span class="done-mark">✓</span>' : ""} ${c.titre}</summary><div class="inner">${c.html}
   <p><label><input type="checkbox" class="readchk" ${read[c.id] ? "checked" : ""}> J'ai compris cette fiche</label></p></div></details>`).join("")}`;
   $$(".readchk").forEach(chk => chk.onchange = e => {
@@ -92,6 +94,26 @@ views.cours = () => {
     const r = store.get("cours_read", {}); r[id] = e.target.checked; store.set("cours_read", r);
     e.target.closest("details").querySelector("summary").innerHTML = (e.target.checked ? '<span class="done-mark">✓</span> ' : " ") + COURSE.find(c => c.id === id).titre;
   });
+  // filtre les fiches qui contiennent le terme, les déplie et surligne chaque occurrence
+  const input = $("#coursSearch"), count = $("#coursCount"), fiches = $$("details[data-id]", app);
+  let timer;
+  input.oninput = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const term = norm(input.value.trim());
+      let shown = 0, total = 0;
+      fiches.forEach(d => {
+        clearMarks(d);
+        if (term.length < 2) { d.hidden = false; d.open = false; return; }
+        const n = markTerm(d, term).length;
+        d.hidden = !n; d.open = !!n; total += n; if (n) shown++;
+      });
+      count.textContent = term.length < 2 ? `${COURSE.length} fiches` : shown ? `${total} occurrence(s) dans ${shown} fiche(s)` : "Aucun résultat";
+      const first = $("mark", app);
+      if (first) first.scrollIntoView({ block: "center" });
+    }, 150);
+  };
+  input.onkeydown = e => { if (e.key === "Escape") { input.value = ""; input.oninput(); } };
 };
 
 views.tps = () => {
@@ -440,9 +462,10 @@ function renderSearch(q) {
 const snippetTitle = (t, nq) => { const p = norm(t).indexOf(nq); return p < 0 ? esc(t) : esc(t.slice(0, p)) + "<mark>" + esc(t.slice(p, p + nq.length)) + "</mark>" + esc(t.slice(p + nq.length)); };
 
 // surligne le terme dans la page ouverte, déplie les blocs concernés, défile jusqu'à la cible
-function highlightInPage({ term, target, h2 }) {
-  const walker = document.createTreeWalker(app, NodeFilter.SHOW_TEXT, {
-    acceptNode: n => n.parentElement.closest("textarea,script,style,mark") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+// entoure chaque occurrence du terme (déjà normalisé) d'un <mark> dans root
+function markTerm(root, term) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => n.parentElement.closest("textarea,script,style,mark,input") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
   });
   const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
   const marks = [];
@@ -456,6 +479,15 @@ function highlightInPage({ term, target, h2 }) {
       marks.push(m); n = rest;
     }
   });
+  return marks;
+}
+function clearMarks(root) {
+  $$("mark", root).forEach(m => m.replaceWith(...m.childNodes));
+  root.normalize();
+}
+
+function highlightInPage({ term, target, h2 }) {
+  const marks = markTerm(app, term);
   marks.forEach(m => {
     for (let d = m.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) d.open = true;
     const ans = m.closest(".answer");
