@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Révisions Data Warehouse</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
+  <div class="brand">DW<span>révis</span></div>
+  <div class="top-sub">IEED · M1 MIAGE · Modélisation décisionnelle &amp; Power BI</div>
+  <div class="search-box">
+    <input type="search" id="searchInput" placeholder="Rechercher un terme…  ( / )" autocomplete="off" aria-label="Rechercher">
+  </div>
+  <button id="themeBtn" class="icon-btn" aria-label="Changer de thème">◐</button>
+</header>
+
+<div class="layout">
+  <nav id="sidebar" class="sidebar">
+    <div class="nav-group">Démarrer</div>
+    <a href="#accueil" data-route="accueil">🏠 Accueil &amp; progression</a>
+    <a href="#methode" data-route="methode">🧭 Méthode Kimball (TP)</a>
+    <div class="nav-group">Comprendre</div>
+    <a href="#cours" data-route="cours">📘 Fiches de cours</a>
+    <a href="#scd" data-route="scd">🕰️ Simulateur SCD</a>
+    <a href="#tps" data-route="tps">✈️ TP1 &amp; TP3 corrigés</a>
+    <div class="nav-group">S'entraîner</div>
+    <a href="#sporteo" data-route="sporteo">🏃 Cas SportéO (Q/R)</a>
+    <a href="#bus" data-route="bus">🧮 Matrice en bus</a>
+    <a href="#classer" data-route="classer">🎯 Additivité &amp; SCD</a>
+    <a href="#quiz" data-route="quiz">❓ Quiz</a>
+    <a href="#flash" data-route="flash">🃏 Flashcards</a>
+    <div class="nav-group">Power BI &amp; SQL</div>
+    <a href="#pbi" data-route="pbi">📊 Power BI pas à pas</a>
+    <a href="#dax" data-route="dax">🧪 DAX (besoins SportéO)</a>
+    <a href="#sql" data-route="sql">🗄️ SQL de l'entrepôt</a>
+  </nav>
+  <main id="app" class="content"></main>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/data-pbi.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
